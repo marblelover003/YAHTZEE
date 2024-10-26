@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link href="style.css" rel="stylesheet">
+    <link href="favicon.png" rel="shortcut icon" size="32x32">
+    <link href="apple_touch_icon.PNG" rel="apple-touch-icon">
+    <title>YAHTZEE - 000 (R00, T00)</title>
+  </head>
+  <body>
+    <h1>YAHTZEE</h1>
+    <div style="text-align: center;">
+      <button onclick="howToPlay()">How to Play <kbd>T</kbd></button>
+      &nbsp;
+      <button onclick="openChangelog()">Changelog <kbd>C</kbd></button>
+      &nbsp;
+      <button onclick="openShortcuts()">Keyboard Shortcuts <kbd>&sol;</kbd></button>
+    </div><br>
+    <div style="text-align: center;">
+      <button onclick="openNewGameMenu()">New Game <kbd>N</kbd></button>
+      &nbsp;
+      <button onclick="openPreviousGames()">Previous Games <kbd>G</kbd></button>
+      <button onclick="reset()">Hard Reset <kbd>Q</kbd></button>
+      <button onclick="refresh()">Refresh <kbd>R</kbd></button>
+    </div><br>
+    <div style="text-align: center;">
+      <table class="table">
+        <tr>
+          <td colspan="3" onclick="holdAll()">Hold all <kbd>H</kbd></td>
+          <td colspan="2" onclick="unholdAll()">Unhold all <kbd>U</kbd></td>
+        </tr>
+        <tr>
+          <td colspan="5" onclick="invert()">Invert hold <kbd>I</kbd></td>
+        </tr>
+        <tr>
+          <td id="d1" class="dice"></td>
+          <td id="d2" class="dice"></td>
+          <td id="d3" class="dice"></td>
+          <td id="d4" class="dice"></td>
+          <td id="d5" class="dice"></td>
+        </tr>
+        <tr>
+          <td onclick="hold(1)">Hold <kbd>1</kbd></td>
+          <td onclick="hold(2)">Hold <kbd>2</kbd></td>
+          <td onclick="hold(3)">Hold <kbd>3</kbd></td>
+          <td onclick="hold(4)">Hold <kbd>4</kbd></td>
+          <td onclick="hold(5)">Hold <kbd>5</kbd></td>
+        </tr>
+        <tr>
+          <td colspan="5" onclick="roll()">Roll <kbd>Space</kbd> (<b id="rollNum">0</b><small>&sol;3</small>)</td>
+        </tr>
+      </table>
+      <p>
+        Score Placement:
+        <select id="scorePlacement" onchange="checkScorePlacement()">
+          <option id="uid00">SELECT ONE</option>
+          <option id="uid01">ACES</option>
+          <option id="uid02">TWOS</option>
+          <option id="uid03">THREES</option>
+          <option id="uid04">FOURS</option>
+          <option id="uid05">FIVES</option>
+          <option id="uid06">SIXES</option>
+          <option id="uid07">TRIPLET</option>
+          <option id="uid08">QUADRUPLET</option>
+          <option id="uid09">FULL HOUSE</option>
+          <option id="uid10">S STRAIGHT</option>
+          <option id="uid11">L STRAIGHT</option>
+          <option id="uid12">CHANCE</option>
+          <option id="uid13">YAHTZEE</option>
+        </select>
+        <button onclick="placeScore()" id="placeScoreBtn">Place Scores <kbd>P</kbd></button>
+      </p>
+      <p>
+        <table class="table scorecard" id="scorecard">
+          <tr>
+            <td colspan="2">Upper Section</td>
+            <td colspan="2">Lower Section</td>
+          </tr>
+          <tr>
+            <td>ACES</td>
+            <td id="aces"></td>
+            <td>TRIPLET</td>
+            <td id="triplet"></td>
+          </tr>
+          <tr>
+            <td>TWOS</td>
+            <td id="twos"></td>
+            <td>QUADRUPLET</td>
+            <td id="quadruplet"></td>
+          </tr>
+          <tr>
+            <td>THREES</td>
+            <td id="threes"></td>
+            <td>FULL HOUSE</td>
+            <td id="fullhouse"></td>
+          </tr>
+          <tr>
+            <td>FOURS</td>
+            <td id="fours"></td>
+            <td>S STRAIGHT</td>
+            <td id="sstraight"></td>
+          </tr>
+          <tr>
+            <td>FIVES</td>
+            <td id="fives"></td>
+            <td>L STRAIGHT</td>
+            <td id="lstraight"></td>
+          </tr>
+          <tr>
+            <td>SIXES</td>
+            <td id="sixes"></td>
+            <td>CHANCE</td>
+            <td id="chance"></td>
+          </tr>
+          <tr>
+            <td>SUBTOTAL</td>
+            <td id="subtotal">0</td>
+            <td>YAHTZEE</td>
+            <td id="yahtzee"></td>
+          </tr>
+          <tr>
+            <td>BONUS</td>
+            <td id="upperbonus">0</td>
+            <td>BONUS</td>
+            <td id="lowerbonus">0</td>
+          </tr>
+          <tr>
+            <td>TOTAL</td>
+            <td id="uppertotal">0</td>
+            <td>TOTAL</td>
+            <td id="lowertotal">0</td>
+          </tr>
+          <tr>
+            <td colspan="4">GRAND TOTAL: <b id="grandtotal">0</b></td>
+          </tr>
+        </table>
+      </p>
+    </div>
+    <div id="howToPlay" class="modal">
+      <span class="titleBar">
+        How to Play YAHTZEE
+        <span style="position: fixed; top: 0; right: 0px; padding: 15px; font-size: 30px;" class="close" onclick="closeHowToPlay()">&times;</span>
+      </span>
+      <span class="content">
+        <h1>How to Play YAHTZEE</h1>
+        <p>On the outside, YAHTZEE may look like a simple dice game.</p>
+        <p>However, on the inside, it is pretty convoluted.</p>
+        <hr>
+        <p>To play YAHTZEE in real life, you'll need five six-sided dice, a writing utensil, and a YAHTZEE scorecard.</p>
+        <hr>
+        <p>On a normal YAHTZEE scorecard, you'll find thirteen unique scoring combos spanning two sections.</p>
+        <p>The Lower Section is much more convoluted than the Upper Section.</p>
+        <hr>
+        <h2>How to Score in the Upper Section</h2>
+        <p>ACES - Score Aces only.</p>
+        <p>TWOS - Score Twos only.</p>
+        <p>THREES - Score Threes only.</p>
+        <p>FOURS - Score Fours only.</p>
+        <p>FIVES - Score Fives only.</p>
+        <p>SIXES - Score Sixes only.</p>
+        <p>BONUS - Score 35 here if you scored 63 or higher in your Upper Section.</p>
+        <hr>
+        <h2>How to Score in the Lower Section</h2>
+        <p>TRIPLET - Score total of all dice IF you have three of one number (e.g., 2-2-2-3-6). Otherwise score zero.</p>
+        <p>QUADRUPLET - Score total of all dice IF you have four of one number (e.g., 6-6-6-6-3). Otherwise score zero.</p>
+        <p>FULL HOUSE - Score 25 IF you have three of one number and two of another (e.g., 4-4-5-5-5). Otherwise score zero.</p>
+        <p>S STRAIGHT - Score 30 IF you have a sequence of four numbers (e.g., 1-2-3-4). Otherwise score zero.</p>
+        <p>L STRAIGHT - Score 40 IF you have a sequence of five numbers (e.g., 2-3-4-5-6). Otherwise score zero.</p>
+        <p>CHANCE - Score total of all dice, no matter what. This is useful if you have a roll that doesn't score anything. However, you only get one - use it wisely!</p>
+        <p>YAHTZEE - Score 50 IF you have five of one number (e.g., 5-5-5-5-5). Otherwise score zero.</p>
+        <p>BONUS - Got another YAHTZEE? No problem! If the number you rolled a YAHTZEE with is open in the Upper Section, score there. (For example, if you rolled 4-4-4-4-4 and you have Fours open, score there.) If the number you rolled a YAHTZEE with has already been scored, you can score any Lower Section combo that hasn't been scored already.</p>
+        <hr>
+        <h1>Maximum Possible Score</h1>
+        <p>The maximum possible score in one game of YAHTZEE is 1,575.</p>
+        <p style="color: #ff9999;">This is only achievable if you roll a YAHTZEE on every turn!</p>
+        <p><a href="javascript:openMaxedScorecard()">Click here to view the breakdown of the maximum possible score!</a></p>
+        <hr>
+        <h1>On Each Turn</h1>
+        <p>FIRST ROLL: You must roll all five dice.</p>
+        <p>At this point, when you roll all five dice for the first time of a turn, you may choose to &quot;hold&quot; one or more dice, or you may choose to reroll all five dice for the second roll. Holding a die retains its value for the next roll.</p>
+        <p>All held dice are automatically unheld upon execution of the third and final roll of a given turn.</p>
+        <p>If you manage to roll a YAHTZEE on the first roll of a given turn (which the odds of that happening are 1 in 1,296), score it right away! YAHTZEEs are the best combo to get in terms of big-time scoring! You could score up to 1,250 points from YAHTZEEs alone in one game!</p>
+        <p>If you didn't roll a YAHTZEE on the first roll, that's OK! You have up to three rolls per turn.</p>
+        <p>SECOND ROLL: Didn't get the combo you wanted on the first roll? No problem! Roll everything again! Got a part of the combo you wanted? Hold a few dice and reroll the rest! You may choose to hold more dice on this roll, or you may also choose to unhold dice that were held in the first roll.</p>
+        <p>THIRD ROLL: Once you roll the dice for the third time of a turn, it automatically becomes time to score. Use the scoring rules above and place your scores in any combo that has not been scored already. All held dice are automatically unheld upon execution of this final roll.</p>
+        <hr>
+        <p></p>
+      </span>
+    </div>
+    <div id="maxedScorecard" class="modal">
+      <span class="titleBar">
+        Maxed Scorecard
+        <span style="position: fixed; top: 0; right: 0px; padding: 15px; font-size: 30px;" class="close" onclick="closeMaxedScorecard()">&times;</span>
+      </span>
+      <span class="content">
+        <h1>Maxed Scorecard</h1>
+        <table>
+          <tr>
+            <td colspan="2">Upper Section</td>
+            <td colspan="2">Lower Section</td>
+          </tr>
+          <tr>
+            <td>ACES</td>
+            <td>5</td>
+            <td>TRIPLET</td>
+            <td>30</td>
+          </tr>
+          <tr>
+            <td>TWOS</td>
+            <td>10</td>
+            <td>QUADRUPLET</td>
+            <td>30</td>
+          </tr>
+          <tr>
+            <td>THREES</td>
+            <td>15</td>
+            <td>FULL HOUSE</td>
+            <td>25</td>
+          </tr>
+          <tr>
+            <td>FOURS</td>
+            <td>20</td>
+            <td>S STRAIGHT</td>
+            <td>30</td>
+          </tr>
+          <tr>
+            <td>FIVES</td>
+            <td>25</td>
+            <td>L STRAIGHT</td>
+            <td>40</td>
+          </tr>
+          <tr>
+            <td>SIXES</td>
+            <td>30</td>
+            <td>CHANCE</td>
+            <td>30</td>
+          </tr>
+          <tr>
+            <td>SUBTOTAL</td>
+            <td>105</td>
+            <td>YAHTZEE</td>
+            <td>50</td>
+          </tr>
+          <tr>
+            <td>BONUS</td>
+            <td>35</td>
+            <td>BONUS</td>
+            <td>1200</td>
+          </tr>
+          <tr>
+            <td>TOTAL</td>
+            <td>140</td>
+            <td>TOTAL</td>
+            <td>1435</td>
+          </tr>
+          <tr>
+            <td colspan="4">GRAND TOTAL: <b style="font-weight: 900;">1575</b></td>
+          </tr>
+        </table>
+      </span>
+    </div>
+    <div id="changelog" class="modal">
+      <span class="titleBar">
+        Changelog
+        <span style="position: fixed; top: 0; right: 0px; padding: 15px; font-size: 30px;" class="close" onclick="closeChangelog()">&times;</span>
+      </span>
+      <span class="content">
+        <h1>Changelog</h1>
+        <p>Current version: v<span id="version">0.0</span></p>
+        <p><a href="javascript:openChangelogV(&quot;10&quot;)">v1.0</a></p>
+        <p><a href="javascript:openChangelogV(&quot;11&quot;)">v1.1</a></p>
+        <p><a href="javascript:openChangelogV(&quot;12&quot;)">v1.2</a></p>
+        <p><a href="javascript:openChangelogV(&quot;13&quot;)">v1.3</a></p>
+        <p><a href="javascript:openChangelogV(&quot;14&quot;)">v1.4</a></p>
+        <p><a href="javascript:openChangelogV(&quot;15&quot;)">v1.5</a></p>
+        <p><a href="javascript:openChangelogV(&quot;151&quot;)">v1.5.1</a></p>
+        <p><a href="javascript:openChangelogV(&quot;16&quot;)">v1.6</a></p>
+        <p><a href="javascript:openChangelogV(&quot;17&quot;)">v1.7</a></p>
+        <p><a href="javascript:openChangelogV(&quot;171&quot;)">v1.7.1</a></p>
+      </span>
+    </div>
+    <div id="changelogV10" class="modal">
+      <span class="titleBar">
+        v1.0 - Nov 05, 2020
+        <span style="position: fixed; top: 0; right: 0px; padding: 15px; font-size: 30px;" class="close" onclick="closeChangelogV(&quot;10&quot;)">&times;</span>
+      </span>
+      <span class="content">
+        <h1>v1.0 - Nov 05, 2020</h1>
+        <p>Initial release.</p>
+      </span>
+    </div>
+    <div id="changelogV11" class="modal">
+      <span class="titleBar">
+        v1.1 - Nov 07, 2020
+        <span style="position: fixed; top: 0; right: 0px; padding: 15px; font-size: 30px;" class="close" onclick="closeChangelogV(&quot;11&quot;)">&times;</span>
+      </span>
+      <span class="content">
+        <h1>v1.1 - Nov 07, 2020</h1>
+        <p>Made text for unavailable scoring options a lot lighter.</p>
+      </span>
+    </div>
+    <div id="changelogV12" class="modal">
+      <span class="titleBar">
+        v1.2 - Nov 08, 2020
+        <span style="position: fixed; top: 0; right: 0px; padding: 15px; font-size: 30px;" class="close" onclick="closeChangelogV(&quot;12&quot;)">&times;</span>
+      </span>
+      <span class="content">
+        <h1>v1.2 - Nov 08, 2020</h1>
+        <p>Added a &quot;Previous Games&quot; menu where you can view the results of previous games from the current session.</p>
+      </span>
+    </div>
+    <div id="changelogV13" class="modal">
+      <span class="titleBar">
+        v1.3 - Dec 31, 2020
+        <span style="position: fixed; top: 0; right: 0px; padding: 15px; font-size: 30px;" class="close" onclick="closeChangelogV(&quot;13&quot;)">&times;</span>
+      </span>
+      <span class="content">
+        <h1>v1.3 - Dec 31, 2020</h1>
+        <p>Fixed a bug when starting a new game where rolled dice weren&apos;t reset to blanks.</p>
+      </span>
+    </div>
+    <div id="changelogV14" class="modal">
+      <span class="titleBar">
+        v1.4 - Jan 26, 2021
+        <span style="position: fixed; top: 0; right: 0px; padding: 15px; font-size: 30px;" class="close" onclick="closeChangelogV(&quot;14&quot;)">&times;</span>
+      </span>
+      <span class="content">
+        <h1>v1.4 - Jan 26, 2021</h1>
+        <p>Added extra colors to the scorecard.</p>
+      </span>
+    </div>
+    <div id="changelogV15" class="modal">
+      <span class="titleBar">
+        v1.5 - Feb 10, 2021
+        <span style="position: fixed; top: 0; right: 0px; padding: 15px; font-size: 30px;" class="close" onclick="closeChangelogV(&quot;15&quot;)">&times;</span>
+      </span>
+      <span class="content">
+        <h1>v1.5 - Feb 10, 2021</h1>
+        <p>Added a hold all feature; press <kbd>H</kbd> to hold all dice, <kbd>U</kbd> to unhold dice, and <kbd>I</kbd> to invert your selection of held dice.</p>
+      </span>
+    </div>
+    <div id="changelogV151" class="modal">
+      <span class="titleBar">
+        v1.5.1 - Feb 10, 2021
+        <span style="position: fixed; top: 0; right: 0px; padding: 15px; font-size: 30px;" class="close" onclick="closeChangelogV(&quot;151&quot;)">&times;</span>
+      </span>
+      <span class="content">
+        <h1>v1.5.1 - Feb 10, 2021</h1>
+        <p>Added local storage for game history. Now you will be able to see your previous games even after closing your browser window. Pressing <kbd>Q</kbd> will still wipe your game history, though; press <kbd>R</kbd> to perform a soft reload which will keep your game history.</p>
+      </span>
+    </div>
+    <div id="changelogV16" class="modal">
+      <span class="titleBar">
+        v1.6 - Mar 26, 2021
+        <span style="position: fixed; top: 0; right: 0px; padding: 15px; font-size: 30px;" class="close" onclick="closeChangelogV(&quot;16&quot;)">&times;</span>
+      </span>
+      <span class="content">
+        <h1>v1.6 - Mar 26, 2021</h1>
+        <p>Added buttons to reset game history and to refresh the page. Primarily useful for mobile users who do not have a keyboard. Also increased the size of dice control buttons for mobile users.</p>
+      </span>
+    </div>
+    <div id="changelogV17" class="modal">
+      <span class="titleBar">
+        v1.7 - Apr 27, 2021
+        <span style="position: fixed; top: 0; right: 0px; padding: 15px; font-size: 30px;" class="close" onclick="closeChangelogV(&quot;17&quot;)">&times;</span>
+      </span>
+      <span class="content">
+        <h1>v1.7 - Apr 27, 2021</h1>
+        <p>Added an Apple touch icon for iOS and macOS users.</p>
+      </span>
+    </div>
+    <div id="changelogV171" class="modal">
+      <span class="titleBar">
+        v1.7.1 - May 01, 2021
+        <span style="position: fixed; top: 0; right: 0px; padding: 15px; font-size: 30px;" class="close" onclick="closeChangelogV(&quot;171&quot;)">&times;</span>
+      </span>
+      <span class="content">
+        <h1>v1.7.1 - May 01, 2021</h1>
+        <p>Centered tables. I finally figured out how to accomplish this, and it&apos;s actually ridiculously simple:</p>
+        <p>
+          <pre>table {<br>&nbsp;&nbsp;&nbsp;&nbsp;margin-left: auto;<br>&nbsp;&nbsp;&nbsp;&nbsp;margin-right: auto;<br>}</pre>
+        </p>
+      </span>
+    </div>
+    <div id="shortcuts" class="modal">
+      <span class="titleBar">
+        Keyboard Shortcuts
+        <span style="position: fixed; top: 0; right: 0px; padding: 15px; font-size: 30px;" class="close" onclick="closeShortcuts()">&times;</span>
+      </span>
+      <span class="content">
+        <h1>Keyboard Shortcuts</h1>
+        <p><kbd>Space</kbd> - Roll all unheld dice.</p>
+        <p><kbd>T</kbd> - Open the &quot;How to Play&quot; menu.</p>
+        <p><kbd>C</kbd> - Open the Changelog.</p>
+        <p><kbd>&sol;</kbd> - Open this menu.</p>
+        <p><kbd>1</kbd>-<kbd>5</kbd> - Hold dice.</p>
+        <p><kbd>N</kbd> - Start a new game.</p>
+        <p><kbd>P</kbd> - Place your score in the selected combination on the scorecard.</p>
+        <p><kbd>Q</kbd> - Perform a hard reset and refresh the page. <span style="color: #ff9999;">Beware: this will wipe your game history!</span></p>
+        <p><kbd>R</kbd> - Refresh the page.</p>
+        <p><kbd>G</kbd> - View previous games.</p>
+        <p><kbd>H</kbd> - Hold all dice.</p>
+        <p><kbd>U</kbd> - Unhold all dice.</p>
+        <p><kbd>I</kbd> - Invert your selection of held dice.</p>
+      </span>
+    </div>
+    <div id="newGameMenu" class="modal">
+      <span class="titleBar">
+        Start a New Game?
+        <span style="position: fixed; top: 0; right: 0px; padding: 15px; font-size: 30px;" class="close" onclick="closeNewGameMenu()">&times;</span>
+      </span>
+      <span class="content">
+        <p>Are you sure?</p>
+        <p><a href="javascript:closeNewGameMenu()">Return to Game</a> | <a href="javascript:newGame()">Start Round <span id="nextRound">2</span></a></p>
+        <p>Previous Game Score:</p>
+        <span style="font-size: 200px; font-weight: 900;" id="prevScore">000</span>
+      </span>
+    </div>
+    <div id="previousGames" class="modal">
+      <span class="titleBar">
+        Previous Games
+        <span style="position: fixed; top: 0; right: 0px; padding: 15px; font-size: 30px;" class="close" onclick="closePreviousGames()">&times;</span>
+      </span>
+      <span class="content">
+        <p id="message">There are no previous games to display. Come back when you finish Round 1.</p>
+        <span id="games"></span>
+      </span>
+    </div>
+    <div id="reload" class="modal">
+      <span class="titleBar">
+        Refresh Page?
+        <span style="position: fixed; top: 0; right: 0px; padding: 15px; font-size: 30px;" class="close" onclick="closeReload()">&times;</span>
+      </span>
+      <span class="content">
+        <p>Are you sure you want to refresh the page? Current game data will be lost.</p>
+        <p><a href="javascript:closeReload()">Nah, keep playing</a> | <a href="javascript:location.reload()">Yes, delete this game</a></p>
+      </span>
+    </div>
+    <div id="reset" class="modal">
+      <span class="titleBar">
+        Reset Game History?
+        <span style="position: fixed; top: 0; right: 0px; padding: 15px; font-size: 30px;" class="close" onclick="closeReset()">&times;</span>
+      </span>
+      <span class="content" id="resetBkgd">
+        <span id="messageContainer">
+          <p id="message2">Are you sure you want to reset your game history?</p>
+          <p><a href="javascript:closeReset()" id="exit">Nah, keep it</a> | <a href="javascript:reset2()" id="conf">Yes, wipe it</a></p>
+        </span>
+      </span>
+    </div>
+    <div id="reset2">
+      <p>Game history wiped successfully.</p>
+      <p><a href="javascript:location.reload()">Reload page</a></p>
+    </div>
+  </body>
+  <script src="script.js"></script>
+</html>
